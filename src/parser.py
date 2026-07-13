@@ -1,13 +1,16 @@
 import json
 import sys
-from typing import Dict
+from typing import Any, Dict
 from pydantic import BaseModel, ValidationError
+
 
 class ParameterType(BaseModel):
     type: str
 
+
 class ReturnType(BaseModel):
     type: str
+
 
 class FunctionDefinition(BaseModel):
     name: str
@@ -15,10 +18,12 @@ class FunctionDefinition(BaseModel):
     parameters: Dict[str, ParameterType]
     returns: ReturnType
 
+
 class Prompt(BaseModel):
     prompt: str
 
-def load_promts(path:str)-> list[Prompt]:
+
+def load_promts(path: str) -> list[Prompt]:
     promts = []
     try:
         with open(path, "r") as f:
@@ -37,16 +42,20 @@ def load_promts(path:str)-> list[Prompt]:
         sys.exit(1)
     return promts
 
-def load_function_definitions(path:str)-> list[FunctionDefinition]:
+
+def load_function_definitions(path: str) -> list[FunctionDefinition]:
     functions = []
-    d1: dict = {
-    "name": "fn_unknown",
-    "description": "Fallback function to use when no other function is appropriate for the user's prompt.",
-    "parameters": {},
-    "returns": {
-      "type": "string"
+    d1: dict[str, Any] = {
+        "name": "fn_unknown",
+        "description": (
+            "Fallback function to use when no other function is "
+            "appropriate for the user's prompt."
+        ),
+        "parameters": {},
+        "returns": {
+            "type": "string"
+        }
     }
-  }
     try:
         with open(path, "r") as f:
             data = json.load(f)
