@@ -58,18 +58,27 @@ def main() -> None:
         return
     model = Small_LLM_Model()
     decoder = ConstrainedDecoder(model)
+
     list_objects = []
     for i, x in zip(prompts, user_pormts):
         input_ids = model.encode(i).tolist()[0]
         add = model.encode('{"name": "').tolist()[0]
         input_ids.extend(add)
-        generated_name = decoder.generate_function_name(input_ids, fn_names)
-        target = f', "prompt": "{x.prompt}", '
-        decoder.force_tokens(target, input_ids)
-        decoder.force_tokens('"parameters": {', input_ids)
-        parm = decoder.generate_paramters(
-            generated_name, function_definitions, input_ids
-        )
+        try:
+            generated_name = decoder.generate_function_name(
+                input_ids, fn_names
+            )
+            target = (
+                f', "prompt": "{x.prompt}", '
+            )
+            decoder.force_tokens(target, input_ids)
+            decoder.force_tokens('"parameters": {', input_ids)
+            parm = decoder.generate_paramters(
+                generated_name, function_definitions, input_ids
+            )
+        except Exception as e:
+            print(f"error {e}")
+            exit(1)
         res = {
             "prompt": x.prompt,
             "name": generated_name,

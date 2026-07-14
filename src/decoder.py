@@ -119,7 +119,7 @@ class ConstrainedDecoder:
                             input_ids.append(
                                 self.model.encode('}').tolist()[0][0]
                             )
-                    if val.type in ["string", "boolean"]:
+                    elif val.type in ["string", "boolean"]:
                         self.force_tokens(': ', input_ids)
                         input_ids.append(
                             self.model.encode('"').tolist()[0][0]
@@ -148,8 +148,9 @@ class ConstrainedDecoder:
                                 self.model.encode('}').tolist()[0][0]
                             )
                             input_ids.append(
-                                self.model.encode('}').tolist()[0][0]
-                            )
+                                self.model.encode('}').tolist()[0][0])
+                    else:
+                        raise ValueError("unvalid parameter")
                     pos += 1
                 return output
         return None
