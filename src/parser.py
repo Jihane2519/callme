@@ -31,6 +31,9 @@ def load_promts(path: str) -> list[Prompt]:
         for item in data:
             pr = Prompt(**item)
             promts.append(pr)
+    except ValidationError as e:
+        print(f"an error has been aquired {e}")
+        sys.exit(1)
     except FileNotFoundError as e:
         print(f"an error has been aquired {e}")
         sys.exit(1)
