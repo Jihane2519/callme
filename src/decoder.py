@@ -150,7 +150,7 @@ class ConstrainedDecoder:
                             input_ids.append(
                                 self.model.encode('}').tolist()[0][0])
                     else:
-                        raise ValueError("unvalid parameter")
+                        raise ValueError("unvalid parameter type")
                     pos += 1
                 return output
         return None

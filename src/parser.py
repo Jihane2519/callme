@@ -1,7 +1,7 @@
 import json
 import sys
 from typing import Any, Dict
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel, ValidationError, model_validator
 
 
 class ParameterType(BaseModel):
@@ -21,6 +21,13 @@ class FunctionDefinition(BaseModel):
 
 class Prompt(BaseModel):
     prompt: str
+
+    @model_validator(mode="after")
+    def verfy_len(self) -> "Prompt":
+        res = self.prompt.strip()
+        if res is None or len(res) == 0:
+            raise ValueError("empty prompt")
+        return self
 
 
 def load_promts(path: str) -> list[Prompt]:
